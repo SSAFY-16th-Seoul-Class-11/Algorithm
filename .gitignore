@@ -1,0 +1,63 @@
+# macOS 시스템 파일 무시
+
+# Finder 설정 파일
+.DS_Store
+
+# 리소스 포크 및 Spotlight 메타데이터
+.AppleDouble
+.LSOverride
+
+# 아이콘 관련 메타데이터
+Icon?
+._*
+
+# Spotlight 검색 인덱스
+.Spotlight-V100
+
+# Trash
+.Trashes
+
+# macOS 시스템 볼륨 정보
+.VolumeIcon.icns
+
+# macOS에서 생성하는 SMB 서버 캐시 파일
+Desktop DB
+Desktop DF
+
+# iCloud 동기화 관련
+*.icloud
+
+# Quick Look 썸네일 캐시
+com.apple.QuickLook.thumbnailcache
+
+# 기타 숨김 파일
+.fseventsd
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+.github
+.idea
+.iml
