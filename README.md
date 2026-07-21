@@ -1,4 +1,4 @@
-# 매일알고
+# Daily ALGO 뿌셔뿌셔
 
 ---
 <table>
