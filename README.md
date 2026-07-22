@@ -45,9 +45,9 @@
 
 <!-- 이 제목과 문제 링크를 수정해 `main` 브랜치에 push하면 `problem_solve/` 하위에 폴더 자동 생성 -->
 
-easy-[네트워크1](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
-normal-[네트워크2](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
-hard-[네트워크3](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
+[네트워크1](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
+[네트워크2](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
+[네트워크3](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
 
 <br />
 
