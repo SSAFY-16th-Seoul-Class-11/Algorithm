@@ -29,9 +29,9 @@
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/mojunsul"><b>서동균</b></a></td>
-    <td align="center"><a href="https://github.com/mojunsul"><b>고민균</b></a></td>
-    <td align="center"><a href="https://github.com/mojunsul"><b>안서현</b></a></td>
-    <td align="center"><a href="https://github.com/mojunsul"><b>김동준</b></a></td>
+    <td align="center"><a href="https://github.com/skyblue1232"><b>고민균</b></a></td>
+    <td align="center"><a href="https://github.com/Hian02"><b>안서현</b></a></td>
+    <td align="center"><a href="https://github.com/Nerororo"><b>김동준</b></a></td>
   </tr>
   
 </table>
