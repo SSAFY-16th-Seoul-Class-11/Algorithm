@@ -107,11 +107,10 @@ def detect_platform_tag(url: str) -> str:
 
 
 def build_daily_readme(
-    idx = 0
-    level = ["Easy", "Normal", "Hard"]
     title: str,
     links: Iterable[tuple[str, str]],
 ) -> str:
+    levels = ["Easy", "Normal", "Hard"]
     lines = [
         f"# {title} 문제",
         "",
@@ -119,8 +118,10 @@ def build_daily_readme(
         "",
     ]
 
-    for problem_title, problem_url in links:
-        lines.append(f"- level[idx++] [{problem_title}]({problem_url})")
+    for idx, (problem_title, problem_url) in enumerate(links):
+        # 링크 개수가 3개를 초과하더라도 에러가 나지 않도록 인덱스 범위 처리
+        level_tag = levels[idx] if idx < len(levels) else f"Level {idx + 1}"
+        lines.append(f"- [{level_tag}] [{problem_title}]({problem_url})")
 
     lines.append("")
     return "\n".join(lines)
