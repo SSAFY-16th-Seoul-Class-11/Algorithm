@@ -45,12 +45,9 @@
 
 <!-- 이 제목과 문제 링크를 수정해 `main` 브랜치에 push하면 `problem_solve/` 하위에 폴더 자동 생성 -->
 
-[Easy] 
-[올바른 괄호](https://school.programmers.co.kr/learn/courses/30/lessons/12909)
-[Normal]
-[네트워크](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
-[Hard]
-[도둑질](https://school.programmers.co.kr/learn/courses/30/lessons/42897)
+[Easy] [올바른 괄호](https://school.programmers.co.kr/learn/courses/30/lessons/12909)
+[Normal] [네트워크](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
+[Hard] [도둑질](https://school.programmers.co.kr/learn/courses/30/lessons/42897)
 
 <br />
 
