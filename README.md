@@ -41,13 +41,13 @@
 
 <!-- 이 부분을 업데이트하면 자동으로 파일이 생성됩니다. -->
 <!-- provlem_solve/{일자}/{스터디멤버 깃헙 id} 형태로 생성됩니다.  -->
-### 🟨 m주차 문제
+### 🟨 mm주차 문제
 
 <!-- 이 제목과 문제 링크를 수정해 `main` 브랜치에 push하면 `problem_solve/` 하위에 폴더 자동 생성 -->
 
-[네트워크1](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
-[네트워크2](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
-[네트워크3](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
+[Easy] [네트워크1](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
+[Normal] [네트워크2](https://school.programmers.co.kr/learn/courses/30/lessons/43162)  
+[Hard] [네트워크3](https://school.programmers.co.kr/learn/courses/30/lessons/43162)
 
 <br />
 
