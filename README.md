@@ -23,10 +23,17 @@
 <table>
   <tr>
     <td align="center"><a href="https://github.com/mojunsul"><img src="https://avatars.githubusercontent.com/mojunsul" width="150px;" alt="oneul0"></a></td>
+    <td align="center"><a href="https://github.com/skyblue1232"><img src="https://avatars.githubusercontent.com/skyblue1232" width="150px;" alt="oneul0"></a></td>
+    <td align="center"><a href="https://github.com/Hian02"><img src="https://avatars.githubusercontent.com/Hian02" width="150px;" alt="oneul0"></a></td>
+    <td align="center"><a href="https://github.com/Nerororo"><img src="https://avatars.githubusercontent.com/Nerororo" width="150px;" alt="oneul0"></a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/mojunsul"><b>서동균</b></a></td>
+    <td align="center"><a href="https://github.com/mojunsul"><b>고민균</b></a></td>
+    <td align="center"><a href="https://github.com/mojunsul"><b>안서현</b></a></td>
+    <td align="center"><a href="https://github.com/mojunsul"><b>김동준</b></a></td>
   </tr>
+  
 </table>
 
 <br />
@@ -46,6 +53,11 @@
 1. 데일리 필수 문제는 꼭 풀어야 합니다.
 2. 빠르게 성장하실 분은 선택 문제도 풀어보아요.
 3. 매주 정기 스터디 1번 필참해주세요.
+
+<br />
+
+## 🙌 방향성 제안
+이제 막 방향성을 정하고 있는 스터디입니다. 의견이 있으시면 편하게 말씀해주세요.
 
 <br />
 
