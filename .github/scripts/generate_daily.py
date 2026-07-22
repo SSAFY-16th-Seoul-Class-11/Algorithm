@@ -56,7 +56,7 @@ def extract_daily_blocks(text: str) -> list[tuple[str, str]]:
     if not blocks:
         raise ValueError(
             "README에서 "
-            "'### 🟨 {날짜 또는 회차} 데일리 문제' 형식의 블록을 찾지 못했습니다."
+            "'### 🟨 {주차} 문제' 형식의 블록을 찾지 못했습니다."
         )
 
     return blocks
@@ -77,7 +77,7 @@ def extract_links(body: str) -> list[tuple[str, str]]:
         links.append((problem_title, problem_url))
 
     if not links:
-        raise ValueError("데일리 문제 블록에서 문제 링크를 찾지 못했습니다.")
+        raise ValueError("문제 블록에서 문제 링크를 찾지 못했습니다.")
 
     return links
 
@@ -100,22 +100,27 @@ def detect_platform_tag(url: str) -> str:
     if "leetcode.com" in lower_url:
         return "LTC"
 
+    if "codeforces.com" in lower_url:
+        return "CF"
+
     return "ETC"
 
 
 def build_daily_readme(
+    idx = 0
+    level = ["Easy", "Normal", "Hard"]
     title: str,
     links: Iterable[tuple[str, str]],
 ) -> str:
     lines = [
-        f"# {title} 데일리 문제",
+        f"# {title} 문제",
         "",
         "## 문제 목록",
         "",
     ]
 
     for problem_title, problem_url in links:
-        lines.append(f"- [{problem_title}]({problem_url})")
+        lines.append(f"- level[idx++] [{problem_title}]({problem_url})")
 
     lines.append("")
     return "\n".join(lines)
