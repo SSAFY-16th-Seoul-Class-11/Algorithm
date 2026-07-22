@@ -35,6 +35,7 @@ MARKDOWN_LINK_PATTERN = re.compile(
 
 
 def sanitize(name: str) -> str:
+    # 파일/폴더 시스템에서 허용되지 않는 특수문자 제거 (대괄호 [] 는 유지)
     invalid = r'<>:"/\\|?*'
 
     for character in invalid:
@@ -62,6 +63,11 @@ def extract_daily_blocks(text: str) -> list[tuple[str, str]]:
     return blocks
 
 
+def clean_problem_title(title: str) -> str:
+    # 기존에 붙어있던 [Easy], [Normal], [Hard] 등의 난이도 태그를 정제
+    return re.sub(r"^\[(Easy|Normal|Hard|Level\s*\d+)\]\s*", "", title).strip()
+
+
 def extract_links(body: str) -> list[tuple[str, str]]:
     links: list[tuple[str, str]] = []
 
@@ -71,7 +77,7 @@ def extract_links(body: str) -> list[tuple[str, str]]:
         if not match:
             continue
 
-        problem_title = match.group("title").strip()
+        problem_title = clean_problem_title(match.group("title"))
         problem_url = match.group("url").strip()
 
         links.append((problem_title, problem_url))
@@ -119,53 +125,24 @@ def build_daily_readme(
     ]
 
     for idx, (problem_title, problem_url) in enumerate(links):
-        # 링크 개수가 3개를 초과하더라도 에러가 나지 않도록 인덱스 범위 처리
         level_tag = levels[idx] if idx < len(levels) else f"Level {idx + 1}"
         lines.append(f"- [{level_tag}] [{problem_title}]({problem_url})")
 
     lines.append("")
     return "\n".join(lines)
 
-def update_root_readme_with_levels(readme_text: str) -> tuple[str, bool]:
-    levels = ["Easy", "Normal", "Hard"]
-
-    def replace_block(match: re.Match) -> str:
-        title = match.group("title")
-        body = match.group("body")
-
-        new_body_lines = []
-        link_idx = 0
-
-        for line in body.splitlines():
-            link_match = MARKDOWN_LINK_PATTERN.match(line.strip())
-            if link_match:
-                prob_title = link_match.group("title").strip()
-                prob_url = link_match.group("url").strip()
-
-                # 이미 [Easy], [Normal] 등의 태그가 붙어있다면 제거 후 새로 부여
-                clean_title = re.sub(r"^\[(Easy|Normal|Hard|Level\s*\d+)\]\s*", "", prob_title)
-
-                level_tag = levels[link_idx] if link_idx < len(levels) else f"Level {link_idx + 1}"
-                link_idx += 1
-
-                new_line = f"[{level_tag}] [{clean_title}]({prob_url})  "
-                new_body_lines.append(new_line)
-            else:
-                new_body_lines.append(line)
-
-        return f"### 🟨 {title} 문제\n" + "\n".join(new_body_lines) + "\n\n"
-
-    updated_text = DAILY_BLOCK_PATTERN.sub(replace_block, readme_text)
-    is_changed = updated_text != readme_text
-    return updated_text, is_changed
-
 
 def build_problem_folder_name(
     problem_title: str,
     problem_url: str,
+    idx: int,
 ) -> str:
+    levels = ["Easy", "Normal", "Hard"]
+    level_tag = levels[idx] if idx < len(levels) else f"Level {idx + 1}"
     platform_tag = detect_platform_tag(problem_url)
-    return sanitize(f"[{platform_tag}] {problem_title}")
+
+    # 폴더명 형식: [PGS] [Easy] 네트워크1
+    return sanitize(f"[{platform_tag}] [{level_tag}] {problem_title}")
 
 
 def extract_member_section(text: str) -> str:
@@ -230,10 +207,6 @@ def extract_members(
 
         if not languages:
             languages = DEFAULT_LANGUAGES.copy()
-            print(
-                f"경고: {username}의 언어 정보가 없어 "
-                f"{', '.join(DEFAULT_LANGUAGES)}를 사용합니다."
-            )
 
         members.append(
             {
@@ -452,6 +425,37 @@ def build_code_template(
     return ""
 
 
+def update_root_readme_with_levels(readme_text: str) -> tuple[str, bool]:
+    levels = ["Easy", "Normal", "Hard"]
+
+    def replace_block(match: re.Match) -> str:
+        title = match.group("title")
+        body = match.group("body")
+
+        new_body_lines = []
+        link_idx = 0
+
+        for line in body.splitlines():
+            link_match = MARKDOWN_LINK_PATTERN.match(line.strip())
+            if link_match:
+                prob_title = clean_problem_title(link_match.group("title"))
+                prob_url = link_match.group("url").strip()
+
+                level_tag = levels[link_idx] if link_idx < len(levels) else f"Level {link_idx + 1}"
+                link_idx += 1
+
+                new_line = f"[{level_tag}] [{prob_title}]({prob_url})  "
+                new_body_lines.append(new_line)
+            else:
+                new_body_lines.append(line)
+
+        return f"### 🟨 {title} 문제\n" + "\n".join(new_body_lines) + "\n\n"
+
+    updated_text = DAILY_BLOCK_PATTERN.sub(replace_block, readme_text)
+    is_changed = updated_text != readme_text
+    return updated_text, is_changed
+
+
 def generate_daily_folder(
     daily_title: str,
     links: list[tuple[str, str]],
@@ -472,19 +476,16 @@ def generate_daily_folder(
 
     daily_readme = daily_directory / "README.md"
 
-    if write_if_changed(
+    write_if_changed(
         daily_readme,
         build_daily_readme(daily_title, links),
-    ):
-        print(
-            f"데일리 README 생성/업데이트: "
-            f"{daily_readme}"
-        )
+    )
 
-    for problem_title, problem_url in links:
+    for idx, (problem_title, problem_url) in enumerate(links):
         problem_folder_name = build_problem_folder_name(
             problem_title,
             problem_url,
+            idx,
         )
 
         problem_directory = (
@@ -502,17 +503,13 @@ def generate_daily_folder(
             / "README.md"
         )
 
-        if write_if_changed(
+        write_if_changed(
             problem_readme,
             build_problem_readme(
                 problem_folder_name,
                 problem_url,
             ),
-        ):
-            print(
-                f"문제 README 생성/업데이트: "
-                f"{problem_readme}"
-            )
+        )
 
         for member in members:
             username = str(member["username"])
@@ -526,10 +523,6 @@ def generate_daily_folder(
                 extension = LANG_EXTENSIONS.get(language)
 
                 if not extension:
-                    print(
-                        "지원하지 않는 언어 스킵: "
-                        f"{username} - {language}"
-                    )
                     continue
 
                 code_file = (
@@ -537,24 +530,13 @@ def generate_daily_folder(
                     / f"{username}.{extension}"
                 )
 
-                created = ensure_file(
+                ensure_file(
                     code_file,
                     build_code_template(
                         username,
                         language,
                     ),
                 )
-
-                if created:
-                    print(
-                        f"코드 템플릿 생성: "
-                        f"{code_file}"
-                    )
-                else:
-                    print(
-                        f"기존 코드 파일 보존: "
-                        f"{code_file}"
-                    )
 
 
 def main() -> None:
@@ -563,23 +545,35 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        readme_text = ROOT_README.read_text(encoding="utf-8")
+        readme_text = ROOT_README.read_text(
+            encoding="utf-8"
+        )
 
-        # 1. 메인 README.md 내용에 난이도 태그 반영 및 저장
         updated_readme_text, is_changed = update_root_readme_with_levels(readme_text)
         if is_changed:
             ROOT_README.write_text(updated_readme_text, encoding="utf-8")
-            print("메인 README.md 난이도 태그 업데이트 완료")
-            readme_text = updated_readme_text  # 최신 텍스트로 교체
+            readme_text = updated_readme_text
 
-        # 2. 기존 폴더 및 파일 생성 로직 진행
-        daily_blocks = extract_daily_blocks(readme_text)
-        member_section = extract_member_section(readme_text)
-        members = extract_members(member_section)
+        daily_blocks = extract_daily_blocks(
+            readme_text
+        )
+
+        member_section = extract_member_section(
+            readme_text
+        )
+
+        members = extract_members(
+            member_section
+        )
 
         for daily_title, daily_body in daily_blocks:
             links = extract_links(daily_body)
-            generate_daily_folder(daily_title, links, members)
+
+            generate_daily_folder(
+                daily_title,
+                links,
+                members,
+            )
 
     except ValueError as error:
         print(f"생성 실패: {error}")
