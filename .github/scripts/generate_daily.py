@@ -29,9 +29,11 @@ DAILY_BLOCK_PATTERN = re.compile(
     re.MULTILINE,
 )
 
-# [Easy] [네트워크1](url) 형태 및 [네트워크1](url) 형태 모두 매칭 가능
+# [Easy], [Normal], [Hard], [Level 1] 등 다양한 레벨 태그 및 불릿 기호 지원
 MARKDOWN_LINK_PATTERN = re.compile(
-    r"^(?:[-*]\s*)?(?:\[(?P<level>Easy|Normal|Hard|Level\s*\d+)\]\s*)?\[(?P<title>.+?)]\((?P<url>.+?)\)\s*$",
+    r"^(?:[-*]\s*)?"
+    r"(?:\[(?P<level>Easy|Normal|Hard|Level\s*\d+)\]\s*)?"
+    r"\[(?P<title>.+?)\]\((?P<url>.+?)\)\s*$",
     re.IGNORECASE
 )
 
@@ -58,7 +60,7 @@ def extract_daily_blocks(text: str) -> list[tuple[str, str]]:
     if not blocks:
         raise ValueError(
             "README에서 "
-            "'### 🟨 {주차} 문제' 형식의 블록을 찾지 못했습니다."
+            "'### 📝💯 {주차} 문제' 형식의 블록을 찾지 못했습니다."
         )
 
     return blocks
@@ -66,9 +68,12 @@ def extract_daily_blocks(text: str) -> list[tuple[str, str]]:
 
 def extract_links(body: str) -> list[dict[str, str]]:
     links: list[dict[str, str]] = []
-    default_levels = ["Easy", "Normal", "Hard"]
+    
+    # 레벨이 지정되지 않았을 때 순차적으로 부여할 기본 순서
+    fallback_levels = ["Easy", "Normal", "Hard"]
+    valid_line_count = 0
 
-    for idx, line in enumerate(body.splitlines()):
+    for line in body.splitlines():
         line = line.strip()
         if not line:
             continue
@@ -79,12 +84,23 @@ def extract_links(body: str) -> list[dict[str, str]]:
             continue
 
         level = match.group("level")
+        
+        # 명시된 level 태그가 없는 경우 처리
         if not level:
-            level = default_levels[idx] if idx < len(default_levels) else f"Level {idx + 1}"
+            if valid_line_count < len(fallback_levels):
+                level = fallback_levels[valid_line_count]
+            else:
+                level = f"Level {valid_line_count + 1}"
 
         problem_title = match.group("title").strip()
-        # 혹시 제목에 남아있을 수 있는 난이도 태그 제거
-        problem_title = re.sub(r"^\[(Easy|Normal|Hard|Level\s*\d+)\]\s*", "", problem_title, flags=re.IGNORECASE).strip()
+        
+        # 제목 안에 남아있을 수 있는 난이도 태그([Easy] 등) 정제
+        problem_title = re.sub(
+            r"^\[(Easy|Normal|Hard|Level\s*\d+)\]\s*", 
+            "", 
+            problem_title, 
+            flags=re.IGNORECASE
+        ).strip()
         
         problem_url = match.group("url").strip()
 
@@ -93,6 +109,8 @@ def extract_links(body: str) -> list[dict[str, str]]:
             "title": problem_title,
             "url": problem_url
         })
+        
+        valid_line_count += 1
 
     if not links:
         raise ValueError("문제 블록에서 문제 링크를 찾지 못했습니다.")
@@ -374,19 +392,7 @@ def build_code_template(
     language: str,
 ) -> str:
     if language == "java":
-        return (
-            ""
-            # "import java.io.*;\n"
-            # "import java.util.*;\n\n"
-            # "class Main {\n"
-            # "    public static void main(String[] args) "
-            # "throws Exception {\n"
-            # "        BufferedReader br = new BufferedReader(\n"
-            # "            new InputStreamReader(System.in)\n"
-            # "        );\n"
-            # "    }\n"
-            # "}\n"
-        )
+        return ""
 
     if language == "swift":
         return (
@@ -410,7 +416,7 @@ def build_code_template(
 
     if language == "c":
         return (
-            "#include <stdio.h>\n\n"
+            "#include <stdio.stdio.h>\n\n"
             "int main(void) {\n"
             "    return 0;\n"
             "}\n"
