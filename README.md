@@ -12,8 +12,11 @@
   </tr>
   <tr>
     <td>언어</td>
-    <td><img src="https://img.shields.io/badge/Java-007396.svg?&style=for-the-badge&logo=openjdk&logoColor=white"> 
-    </td>
+    <td><img src="https://img.shields.io/badge/Java-007396.svg?&style=for-the-badge&logo=openjdk&logoColor=white"></td>
+  </tr>
+  <tr>
+    <td>정기 모임 (아직 변동 가능)</td>
+    <td>매주 수요일 아침 8시</td>
   </tr>
 </table>
 
